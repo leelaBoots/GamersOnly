@@ -42,10 +42,10 @@ namespace API
             services.AddApplicationServices(_config);
 
             services.AddControllers();
-            /*services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
-            });*/
+            });
             services.AddCors();
             // this also extends IServiceCollection with our Identity services Lesson 45.
             services.AddIdentitySerivces(_config);
@@ -71,9 +71,10 @@ namespace API
             // allows browser to get from /WeatherForecast endpoint to the WeatherForecast controller
             app.UseRouting();
 
-            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200")); // placement of this after routing and before autorization is important
+            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200")); // placement of this after routing and before authorization is important
 
             app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
