@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using API.Data;
 using API.Extensions;
 using API.Interfaces;
+using API.Middleware;
 using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -38,8 +39,15 @@ namespace API
         // dotnet core will take care of the creation and the destruction of the services
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<ITokenService, TokenService>();
+
             // this is an extension class that will load all of the services that we created
             services.AddApplicationServices(_config);
+
+            services.AddDbContext<DataContext>(options =>
+            {
+                options.UseSqlite(_config.GetConnectionString("DefaultConnection"));
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -56,15 +64,9 @@ namespace API
         {
             // our requests go though a series of middleware on the way in and on the way out
 
-            // if applcation encounters a problem and we are in development mode, then the application
-            // will use the developer page
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
-            }
-
+            // our own Middleware class will handle all exceptions
+            app.UseMiddleware<ExceptionMiddleware>();
+            
             // redirect http to https request
             app.UseHttpsRedirection();
 
