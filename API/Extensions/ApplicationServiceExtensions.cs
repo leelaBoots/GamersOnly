@@ -1,4 +1,5 @@
 using API.Data;
+using API.Helpers;
 using API.Interfaces;
 using API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,8 @@ namespace API.Extensions
         // this extends the IServiceCollection with our own stuff Lesson 45.
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config) {
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);  // needs the location of the AutoMapperProfile assemblies
             services.AddDbContext<DataContext>(options =>
             {
                 options.UseSqlite(config.GetConnectionString("DefaultConnection"));
