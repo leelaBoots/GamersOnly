@@ -9,7 +9,7 @@ namespace API.Interfaces
 {
     public interface IUserRepository
     {
-        // allows user tpo update their profile
+        // allows user to update their profile
         void Update(AppUser user);
 
         // save all changes when we are done
