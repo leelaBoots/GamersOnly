@@ -1,0 +1,42 @@
+/* zoom in on the users photo when hovering */
+.card:hover img {
+    transform: scale(1.2, 1.2);
+    transition-duration: 500ms;
+    transition-timing-function: ease-out;
+    opacity: 0.7;
+}
+
+/* return photo to normal */
+.card img {
+    transform: scale(1.0, 1.0);
+    transition-duration: 500ms;
+    transition-timing-function: ease-out;
+}
+
+/* when the photo zooms, keep it within its wrapper */
+.card-img-wrapper {
+    overflow: hidden;
+    position: relative;
+}
+
+/* position the icons aboslutely with in the wrapper and hide them */
+.member-icons {
+    position: absolute;
+    bottom: -30%;
+    left: 0;
+    right: 0;
+    margin-right: auto;
+    margin-left: auto;
+    opacity: 0;
+}
+
+/* show the icons when hovering */
+.card-img-wrapper:hover .member-icons {
+    bottom: 0;
+    opacity: 1;
+}
+
+/* animate the icons upwards when hovering over photo */
+.animate {
+    transition: all 0.3s ease-in-out;
+}

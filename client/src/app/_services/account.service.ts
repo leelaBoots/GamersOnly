@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { longStackSupport } from 'q';
 import { ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 
 /* This decorator means our service can be injected into components or other services in our application */
@@ -11,7 +12,7 @@ import { User } from '../_models/user';
 })
 /* this will be used to make requests to our API */
 export class AccountService {
-  baseUrl = 'https://localhost:5001/api/';
+  baseUrl = environment.apiUrl;
   private currentUserSource = new ReplaySubject<User>(1); // 1 means we get the last 1 user, so this will be the size of the buffer
   currentUser$ = this.currentUserSource.asObservable(); // by convention, we add $ to end of observable name
 
