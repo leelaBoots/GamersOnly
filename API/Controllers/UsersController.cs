@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using API.Data;
 using API.DTOs;
@@ -40,6 +41,25 @@ namespace API.Controllers
         public async Task<ActionResult<MemberDto>> GetUser(string username)
         {
             return await _userRepository.GetMemberAsync(username);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto) {
+            // find the claim that matches the given name identifier
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            // now use this name to get the user from the user repository
+            var user = await _userRepository.GetUserByUsernameAsync(username);
+            // AutoMapper: this saves us from manually mapping out dto to our user object. Map has tons of overloads for different types of objects
+            _mapper.Map(memberUpdateDto, user);
+            // this flags the user as updated, to prevent us getting an exception when coming back from updating our database
+            _userRepository.Update(user);
+
+            // we dont need to send any content back for a put request
+            if (await _userRepository.SaveAllAsync()) return NoContent();
+
+            // default if SaveAllAsync() fails
+            return BadRequest("Failed to update user");
+             
         }
     }
 }

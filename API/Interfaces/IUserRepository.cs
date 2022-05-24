@@ -13,7 +13,7 @@ namespace API.Interfaces
         void Update(AppUser user);
 
         // save all changes when we are done
-        Task<bool> SaveAllSync();
+        Task<bool> SaveAllAsync();
         Task<IEnumerable<AppUser>> GetUsersAsync();
         Task<AppUser> GetUserByIdAsync(int id);
         Task<AppUser> GetUserByUsernameAsync(string username);
