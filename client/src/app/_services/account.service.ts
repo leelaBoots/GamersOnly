@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { longStackSupport } from 'q';
 import { ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -31,8 +30,7 @@ export class AccountService {
       map((response: any) => {
         const user = response;
         if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
-          this.currentUserSource.next(user); // this is how you set the next value in the ReplaySubject
+          this.setCurrentUser(user);
         }
       })
     )
@@ -42,8 +40,7 @@ export class AccountService {
     return this.http.post(this.baseUrl + 'account/register', model).pipe(
       map((user: User) => {
         if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
-          this.currentUserSource.next(user); // this is how you set the next value in the ReplaySubject
+          this.setCurrentUser(user);
         }
       })
     )
@@ -52,6 +49,7 @@ export class AccountService {
 
   /* helper method */
   setCurrentUser(user: User) {
+    localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user); // this is how you set the next value in the ReplaySubject
   }
 
