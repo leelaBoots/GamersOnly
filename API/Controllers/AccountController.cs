@@ -44,6 +44,7 @@ namespace API.Controllers
             return new UserDto {
                 Username = user.UserName,
                 Token = _tokenService.CreateToken(user)
+                // we dont need photos because user does not have photos yet
             };
         }
 
