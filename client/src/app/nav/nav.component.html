@@ -19,7 +19,8 @@
         </ul>
 
         <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown> <!-- dropdown Angular directive. use "as user" to make use of the username in the display below -->
-            <a class="dropdown-toggle text-light" dropdownToggle>Welcome {{user.username | titlecase}}</a> <!-- dropdownToggle Angular directive. Angular | to display titlecase-->
+            <img src="{{user.photoUrl}}" alt="{{user.username}}">
+            <a class="dropdown-toggle text-light ml-2" dropdownToggle>Welcome {{user.username | titlecase}}</a> <!-- dropdownToggle Angular directive. Angular | to display titlecase-->
             <div class="dropdown-menu mt-3" *dropdownMenu>  <!-- *dropdownToggle is a structural directive -->
                 <a routerLink="/member/edit" class="dropdown-item">Edit Profile</a>
                 <div class="dropdown-divider"></div>
