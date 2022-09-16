@@ -16,6 +16,7 @@ namespace API.Helpers
                 .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
             CreateMap<Photo, PhotoDto>();
             CreateMap<MemberUpdateDto, AppUser>(); // used when updating profile
+            CreateMap<RegisterDto, AppUser>(); // this is so we dont have to manually map the proerties we are receiving from our accountcontroller
         }
         
     }
