@@ -65,6 +65,7 @@ namespace API
             // our requests go though a series of middleware on the way in and on the way out
 
             // our own Middleware class will handle all exceptions
+            // middleware will occur for every single request. the alternative action filters can be applied more selectively
             app.UseMiddleware<ExceptionMiddleware>();
             
             // redirect http to https request

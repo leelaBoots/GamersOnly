@@ -47,13 +47,14 @@ namespace API.Controllers
             return new UserDto {
                 Username = user.UserName,
                 Token = _tokenService.CreateToken(user),
-                KnownAs = user.KnownAs
+                KnownAs = user.KnownAs,
+                Gender = user.Gender
                 // we dont need photos because user does not have photos yet
             };
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserDto>> Login(RegisterDto loginDto)
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             // first thing we need to do is get the user from the database
             var user = await _context.Users
@@ -75,7 +76,8 @@ namespace API.Controllers
                 Username = user.UserName,
                 Token = _tokenService.CreateToken(user),
                 PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
-                KnownAs = user.KnownAs
+                KnownAs = user.KnownAs,
+                Gender = user.Gender
                 // make main photo optional? because they may not have set one yet
             };
         }
