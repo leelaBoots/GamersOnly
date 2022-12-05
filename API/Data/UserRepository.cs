@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -31,11 +32,38 @@ namespace API.Data
                 .SingleOrDefaultAsync();
         }
 
-        public async Task <IEnumerable<MemberDto>> GetMembersAsync()
+        public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
         {
-            return await _context.Users
+            // AsNoTracking turns off tracking in EF because we only ever read this, makes it more effiecient
+            // Old way, now we need to filter BEFORE we project to the MemberDto
+            /*var query = _context.Users
                 .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+                .AsNoTracking()
+                .AsQueryable();*/
+
+            // we dont want to return the users profile in the results, and also filter by gender
+            var query = _context.Users.AsQueryable();
+            query = query.Where(u => u.UserName != userParams.CurrentUsername); 
+            query = query.Where(u => u.Gender == userParams.Gender);
+
+            // calculate the date range via the min and max age params
+            // This is needed when we upgrade to .net7
+            //var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1));
+            //var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge));
+            var minDob = DateTime.Today.AddYears(-userParams.MaxAge - 1);
+            var maxDob = DateTime.Today.AddYears(-userParams.MinAge);
+
+            query = query.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob);
+
+            query = userParams.OrderBy switch {
+              "created" => query.OrderByDescending(u => u.Created),
+              _ => query.OrderByDescending(u => u.LastActive)
+            };
+
+            // we no longer execute the query here, we pass this to CreateAsync and it executes query there.
+            return await PagedList<MemberDto>.CreateAsync(query.ProjectTo<MemberDto>(_mapper
+              .ConfigurationProvider).AsNoTracking(),
+              userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<AppUser> GetUserByIdAsync(int id)

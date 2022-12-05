@@ -6,6 +6,7 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -32,10 +33,23 @@ namespace API.Controllers
 
         // api/users/
         [HttpGet]
-        /* IEnumerable is a simple list instead of List type that has may methods not needed */
-        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
+        /* IEnumerable is a simple list instead of List type that has may methods not needed.
+        because we are in a API controller, .NET should be smart enough to see we are sending query string parameters,
+        and it should be able to match them up in userParams */
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery]UserParams userParams)
         {
-            var users = await _userRepository.GetMembersAsync(); // await gets results of a Task
+            var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+            userParams.CurrentUsername = user.UserName;
+
+            // if gender pref is not passed in params, then set it to opposite gender by default
+            if (string.IsNullOrEmpty(userParams.Gender)) {
+              userParams.Gender = user.Gender == "male" ? "female" : "male";
+            }
+
+            var users = await _userRepository.GetMembersAsync(userParams); // await gets results of a Task
+
+            // we always have access to our Response inside the controllers 
+            Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
 
             return Ok(users);
         }

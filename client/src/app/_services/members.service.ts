@@ -1,9 +1,13 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Member } from 'src/app/_models/member';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { observable, Observable, of } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+import { PaginatedResult } from '../_models/pagination';
+import { UserParams } from '../_models/userParams';
+import { AccountService } from './account.service';
+import { User } from '../_models/user';
 
 /* This is no longer needed, because we now attach authorization headers via jwt.interceptor.ts
 const httpOptions = {
@@ -23,11 +27,45 @@ export class MembersService {
   // this makes them a good candidate for state management, we could use Redux, or Mobex but that is overkill
   // for this application
   members: Member[] = []; // this is used to reduce calls to the API
+  memberCache = new Map(); // using a Map allows us to use get and set to store query results in cache
+  user: User | undefined;
+  userParams: UserParams | undefined;
 
   // because its a service that is going to make http requests to our API, bring in the http client
-  constructor(private http: HttpClient) { }
+  // because we need access to the user, inject the AccountService.
+  // Its ok to inject services into other services so long as you do not create a circular reference
+  constructor(private http: HttpClient, private accountService: AccountService) {
+    this.accountService.currentUser$.pipe(take(1)).subscribe({
+      next: user => {
+        if (user) {
+          this.userParams = new UserParams(user);
+          this.user = user;
+        }
+      }
+    })
+  }
 
-  getMembers(): Observable<Member[]> {
+  /* we can user these get/set helper methods inside our components */
+
+  getUserParams() {
+    return this.userParams;
+  }
+
+  setUserParams(params: UserParams) {
+    this.userParams = params;
+  }
+
+  resetUserParams() {
+    if (this.user) {
+      // this clears our the userParams by setting it equal to a new object
+      this.userParams = new UserParams(this.user);
+      return this.userParams;
+    }
+    return;
+  }
+
+  // this is old method that checks cache, before we had pagination
+  /*getMembers(): Observable<Member[]> {
     // check if we already have the members loaded before call to API
     if (this.members.length > 0) return of(this.members); // "of" will return something as an observable
 
@@ -37,13 +75,43 @@ export class MembersService {
         return members; // map already returns things as observables
       })
     )
+  }*/
+
+  getMembers(userParams: UserParams) {
+    // use a string of the userParams separated by - as the key store query results in cache
+    const response = this.memberCache.get(Object.values(userParams).join('-'));
+
+    if (response) return of(response);
+
+    let params = this.getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
+
+    params = params.append('minAge', userParams.minAge.toString());
+    params = params.append('maxAge', userParams.maxAge.toString());
+    params = params.append('gender', userParams.gender.toString());
+    params = params.append('orderBy', userParams.orderBy.toString());
+    
+    // use a pipe() save the query results in cache using params string as the key, after the query is made to the API
+    return this.getPaginatedResult<Member[]>(this.baseUrl + 'users', params).pipe(
+      map(response => { 
+        this.memberCache.set(Object.values(userParams).join('-'), response);
+        return response;
+      })
+    )
   }
 
-  getMember(username: string) {
-    // attempt to find our user by username, use 3 === for typescript equality
-    const member = this.members.find(x => x.username === username);
-    if (member != undefined) return of(member); // find returns undefined if not found
+  
 
+  getMember(username: string) {
+
+    // reduce the various arrays of members into a single array, then search for the username in the cache
+    const member = [...this.memberCache.values()]
+      .reduce((arr, elem) => arr.concat(elem.result), [])
+      .find((member: Member) => member.username === username);
+
+    // if we find the member in the cache, then use that
+    if (member) return of(member);
+
+    // otherwise we need to make a call to the api to get the user
     return this.http.get<Member>(this.baseUrl + 'users/' + username);
   }
 
@@ -63,5 +131,33 @@ export class MembersService {
 
   deletePhoto(photoId: number) {
     return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
+  }
+
+  // these 2 helper methods could be used for other services, but would probably need to be moved into their own file
+  private getPaginatedResult<T>(url: string, params: HttpParams) {
+    const paginatedResult: PaginatedResult<T> = new PaginatedResult<T>();
+    return this.http.get<T>(url, { observe: 'response', params }).pipe(
+      map(response => {
+        // our Members array will be contained in response.body
+        if (response.body) {
+          paginatedResult.result = response.body;
+        }
+        const pagination = response.headers.get('Pagination');
+        //if (response.headers.get('Pagination') !== null) {
+        if (pagination) {
+          paginatedResult.pagination = JSON.parse(pagination);
+        }
+        return paginatedResult;
+      })
+    );
+  }
+
+  private getPaginationHeaders(pageNumber: number, pageSize: number) {
+    let params = new HttpParams();
+
+    params = params.append('pageNumber', pageNumber.toString());
+    params = params.append('pageSize', pageSize.toString());
+
+    return params;
   }
 }
