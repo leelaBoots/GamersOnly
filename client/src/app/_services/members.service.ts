@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Member } from 'src/app/_models/member';
-import { observable, Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { PaginatedResult } from '../_models/pagination';
 import { UserParams } from '../_models/userParams';
@@ -131,6 +131,19 @@ export class MembersService {
 
   deletePhoto(photoId: number) {
     return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
+  }
+
+  addLike(username: string) {
+    //for post, just pass empty object {}
+    return this.http.post(this.baseUrl + 'likes/' + username, {});
+  }
+
+  getLikes(predicate: string, pageNumber: number, pageSize: number) {
+    let params = this.getPaginationHeaders(pageNumber, pageSize);
+
+    params = params.append('predicate', predicate);
+
+    return this.getPaginatedResult<Member[]>(this.baseUrl + 'likes', params);
   }
 
   // these 2 helper methods could be used for other services, but would probably need to be moved into their own file
