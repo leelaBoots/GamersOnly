@@ -23,7 +23,7 @@ namespace API.Helpers
 
       // this has one jobm to update one property LastActive
       var repo = resultContext.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
-      var user = await repo.GetUserByIdAsync(int.Parse(userId));
+      var user = await repo.GetUserByIdAsync(userId);
       user.LastActive = DateTime.UtcNow;
       await repo.SaveAllAsync(); // update the database with this line
 
