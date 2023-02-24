@@ -27,7 +27,7 @@
             <div class="card-footer">
                 <div class="btn-group d-flex">
                     <button class="btn btn-primary">Like</button>
-                    <button class="btn btn-success">Message</button>
+                    <button (click)="selectTab('Messages')" class="btn btn-success">Message</button>
                 </div>
             </div>
 
@@ -37,25 +37,26 @@
     <div class="col-8">
         <!-- tabset is an example of an ngx module that has not turned off css encapsulatiuon. they encapsulate their own styles.
         in order to apply our own styings we must add our own class attribute -->
-        <tabset class="member-tabset">
-            <tab heading='About {{member.knownAs}}'>
+        <!-- #memberTabs is a template reference variable so that we can access this tabset -->
+        <tabset class="member-tabset" #memberTabs>
+            <!-- use the onTabActivated method we created in our component, selectTab is a method provided from tabset -->
+            <tab heading='About {{member.knownAs}}' (selectTab)="onTabActivated($event)">
                 <h4>Description</h4>
                 <p>{{member.introduction}}</p>
                 <h4>Looking for</h4>
                 <p>{{member.lookingFor}}</p>
             </tab>
-            <tab heading='Interests'>
+            <tab heading='Interests' (selectTab)="onTabActivated($event)">
                 <h4>Interests</h4>
                 <p>{{member.interests}}</p>
             </tab>
-            <tab heading='Photos'>
+            <tab heading='Photos' (selectTab)="onTabActivated($event)">
                 <h4>Photos</h4>
                 <ngx-gallery [options]="galleryOptions" [images]="galleryImages" 
                     style="display: inline-block; margin-bottom: 20px;"></ngx-gallery>
             </tab>
-            <tab heading='Messages'>
-                <h4>Messages</h4>
-                <p>Messages will go here</p>
+            <tab heading='Messages' (selectTab)="onTabActivated($event)">
+                <app-member-messages [messages]="messages" [username]="member.username"></app-member-messages>
             </tab>
         </tabset>
     </div>
