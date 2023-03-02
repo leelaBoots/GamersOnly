@@ -4,6 +4,8 @@ using API.DTOs;
 using API.Entities;
 using API.Helpers;
 
+/* Design Paradigm: We wiil create an interface any time we implment a new Service or Repository  */
+
 namespace API.Interfaces
 {
     public interface ILikesRepository

@@ -13,8 +13,10 @@ import { MessageService } from 'src/app/_services/message.service';
   styleUrls: ['./member-detail.component.css']
 })
 export class MemberDetailComponent implements OnInit {
-  @ViewChild('memberTabs') memberTabs?: TabsetComponent;
-  member: Member;
+  // we dont have access to this memberTabs view child until AFTER the component is constructed because it is dynamic.
+  // add static: true to resolve this, along with using routeResolver
+  @ViewChild('memberTabs', {static: true}) memberTabs?: TabsetComponent;
+  member: Member =  {} as Member; // workaround, set member to an empty object if does not exist
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
   activeTab?: TabDirective;
@@ -23,7 +25,10 @@ export class MemberDetailComponent implements OnInit {
   constructor(private memberService: MembersService, private route: ActivatedRoute, private messageService: MessageService) { }
 
   ngOnInit(): void {
-    this.loadMember();
+    // this.loadMember(); // we no longer get member from the memberService, we will get it from our Route
+    this.route.data.subscribe({
+      next: data => this.member = data['member']
+    })
 
     // this returns an observable, so we must subscribe to it
     this.route.queryParams.subscribe({
@@ -42,6 +47,8 @@ export class MemberDetailComponent implements OnInit {
         preview: false
       }
     ]
+
+    this.galleryImages = this.getImages();
   }
 
   getImages(): NgxGalleryImage[] {
@@ -56,14 +63,15 @@ export class MemberDetailComponent implements OnInit {
     return imageUrls;
   }
 
-  loadMember() {
+  // we dont use this method anymore, because we are getting the member from the route, before whatever element is constructed
+  /*loadMember() {
     this.memberService.getMember(this.route.snapshot.paramMap.get('username')).subscribe(member => {
       this.member = member;
 
       // get images now that we actaully have the member
       this.galleryImages = this.getImages();
     })
-  }
+  }*/
 
   selectTab(heading: string) {
     if(this.memberTabs) {
