@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, FormControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AccountService } from '../_services/account.service';
@@ -12,12 +12,12 @@ import { AccountService } from '../_services/account.service';
 export class RegisterComponent implements OnInit {
   @Output() cancelRegister = new EventEmitter();
   //model: any = {}; // we're not using model property, because we use registerForm now.
-  registerForm: FormGroup; // provided by angular forms, we will use it for Reactive forms
+  registerForm: UntypedFormGroup; // provided by angular forms, we will use it for Reactive forms
   maxDate: Date;
   validationErrors: string[] = []; // initialize array to empty array because we check the length for error messages
 
   // inject the accountService into this component
-  constructor(private accountService: AccountService, private toastr: ToastrService, private fb: FormBuilder, private router: Router) { }
+  constructor(private accountService: AccountService, private toastr: ToastrService, private fb: UntypedFormBuilder, private router: Router) { }
 
   ngOnInit(): void {
     this.initializeForm();

@@ -4,7 +4,6 @@ import { environment } from 'src/environments/environment';
 import { Member } from 'src/app/_models/member';
 import { of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { PaginatedResult } from '../_models/pagination';
 import { UserParams } from '../_models/userParams';
 import { AccountService } from './account.service';
 import { User } from '../_models/user';
