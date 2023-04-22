@@ -49,6 +49,9 @@ export class AccountService {
 
   /* helper method */
   setCurrentUser(user: User) {
+    user.roles = [];
+    const roles = this.getDecodedToken(user.token).role;
+    Array.isArray(roles) ? user.roles = roles : user.roles.push(roles);
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user); // this is how you set the next value in the ReplaySubject
   }
@@ -56,5 +59,10 @@ export class AccountService {
   logout() {
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+  }
+
+  getDecodedToken(token: string) {
+    // splitting on '.' and getting 2nd element removes the algorithm info at begining of token, and the signature info at the end of the token.
+    return JSON.parse(atob(token.split('.')[1]));
   }
 }

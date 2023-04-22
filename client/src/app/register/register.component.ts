@@ -13,7 +13,7 @@ export class RegisterComponent implements OnInit {
   @Output() cancelRegister = new EventEmitter();
   //model: any = {}; // we're not using model property, because we use registerForm now.
   registerForm: UntypedFormGroup; // provided by angular forms, we will use it for Reactive forms
-  maxDate: Date;
+  maxDate: Date = new Date();
   validationErrors: string[] = []; // initialize array to empty array because we check the length for error messages
 
   // inject the accountService into this component
@@ -22,7 +22,6 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.initializeForm();
     // insure user cannot enter a date more than 18 years ago
-    this.maxDate = new Date();
     this.maxDate.setFullYear(this.maxDate.getFullYear() -18);
   }
 
@@ -30,7 +29,7 @@ export class RegisterComponent implements OnInit {
     // using formBuilder here simplifies our code a bit instead of specifying formBuilder for each input
     this.registerForm = this.fb.group({
       gender: ['female'],
-      userame: ['', Validators.required],
+      username: ['', Validators.required],
       knownAs: ['', Validators.required],
       dateOfBirth: ['', Validators.required],
       city: ['', Validators.required],

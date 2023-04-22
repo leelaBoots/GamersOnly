@@ -1,13 +1,13 @@
-import { Component, Input, OnInit, Self } from '@angular/core';
+import { Component, Input, Self } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 @Component({
-  selector: 'app-date-input',
-  templateUrl: './date-input.component.html',
-  styleUrls: ['./date-input.component.css']
+  selector: 'app-date-picker',
+  templateUrl: './date-picker.component.html',
+  styleUrls: ['./date-picker.component.css']
 })
-export class DateInputComponent implements ControlValueAccessor {
+export class DatePickerComponent implements ControlValueAccessor {
   @Input() label = '';
   @Input() maxDate: Date | undefined;
   // Partial means the configurations are optional and we can just specify a few
@@ -18,7 +18,7 @@ export class DateInputComponent implements ControlValueAccessor {
     this.ngControl.valueAccessor = this;
     this.bsConfig = {
       containerClass: 'theme-red',
-      dateInputFormat: 'DD MMMM YYYY'
+      dateInputFormat: 'DD/MM/YYYY'
     }
   }
 
