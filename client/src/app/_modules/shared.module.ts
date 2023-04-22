@@ -9,6 +9,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { TimeagoModule } from 'ngx-timeago';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 /* ng generate automatically imports the CommonModule. This is fine, every angular module needs this */
 // Angular bootstrap modules require specifying for root
@@ -22,11 +24,15 @@ import { TimeagoModule } from 'ngx-timeago';
     }),
     TabsModule.forRoot(),
     NgxGalleryModule,
+    NgxSpinnerModule.forRoot({
+      type: 'line-scale-party'
+    }),
     FileUploadModule,
     BsDatepickerModule.forRoot(),
     PaginationModule.forRoot(),
     ButtonsModule.forRoot(),
-    TimeagoModule.forRoot()
+    TimeagoModule.forRoot(),
+    ModalModule.forRoot()
   ],
   // we have to export modules as well because we are using a 'shared' module
   exports: [
@@ -34,11 +40,13 @@ import { TimeagoModule } from 'ngx-timeago';
     ToastrModule,
     TabsModule,
     NgxGalleryModule,
+    NgxSpinnerModule,
     FileUploadModule,
     BsDatepickerModule,
     PaginationModule,
     ButtonsModule,
-    TimeagoModule
+    TimeagoModule,
+    ModalModule
   ]
 })
 export class SharedModule { }

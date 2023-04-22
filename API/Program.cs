@@ -1,3 +1,8 @@
+using API.Entities;
+using Microsoft.AspNetCore.Identity;
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 var builder = WebApplication.CreateBuilder(args);
 
 // add services
@@ -30,8 +35,8 @@ app.UseCors(builder => builder.AllowAnyHeader()
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
+//app.UseDefaultFiles();
+//app.UseStaticFiles();
 
 app.MapControllers();
 // will implement this later in lesson when we use SignalR
@@ -45,15 +50,14 @@ using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 try {
     var context = services.GetRequiredService<DataContext>();
-    //var userManager = services.GetRequiredService<UserManager<AppUser>>();
-    //var roleManager = services.GetRequiredService<RoleManager<AppUser>>();
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
 
     // automatically recreate our database if it is dropped
     // also allows us to just restart app to apply any migrations
     await context.Database.MigrateAsync();
     // seed our database with our json file containing fake data
-    await Seed.SeedUsers(context);
-    // await Seed.SeedUsers(userManager, roleManager);
+    await Seed.SeedUsers(userManager, roleManager);
 }
 catch (Exception ex) {
     var logger = services.GetRequiredService<ILogger<Program>>();
@@ -61,8 +65,8 @@ catch (Exception ex) {
 
 }
 
-await app.RunAsync();
-//app.Run();
+//await app.RunAsync();
+app.Run();
 
 /*
 

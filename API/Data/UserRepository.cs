@@ -42,9 +42,6 @@ namespace API.Data
             query = query.Where(u => u.Gender == userParams.Gender);
 
             // calculate the date range via the min and max age params
-            // This is needed when we upgrade to .net7
-            //var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1));
-            //var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge));
             var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1));
             var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge));
 
