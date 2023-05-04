@@ -19,8 +19,13 @@ export class AppComponent implements OnInit {
   }
 
   setCurrentUser() {
+    const userstring = localStorage.getItem('user');
+
+    if (!userstring) return;
+
     // because we stringified the object in local source, we must parse it here
-    const user: User = JSON.parse(localStorage.getItem('user'));
+    const user: User = JSON.parse(userstring);
+
     // here we make the effort to get the user token from local storage then setting it in our account service, to make the user login persistent on page refresh. 
     this.accountService.setCurrentUser(user);
   }

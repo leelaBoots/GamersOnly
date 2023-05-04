@@ -20,6 +20,10 @@ namespace API.Data
         // this is for messages between users
         public DbSet<Message> Messages { get; set; }
 
+        // this is for marking messages as read in real time using database.
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<Connection> Connections {get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder) {
           base.OnModelCreating(builder);
 
