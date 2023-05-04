@@ -12,8 +12,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class UserManagementComponent implements OnInit {
   users: User[] = [];
-  //bsModalRef?: BsModalRef;
-  // throwing error, might be because of wrong versions of bootstrap
   bsModalRef: BsModalRef<RolesModalComponent> = new BsModalRef<RolesModalComponent>();
 
   availableRoles = [
@@ -22,8 +20,7 @@ export class UserManagementComponent implements OnInit {
     'Member'
   ]
 
-  constructor(private adminService: AdminService, private modalService: BsModalService) { 
-    this.bsModalRef = new BsModalRef();
+  constructor(private adminService: AdminService, private modalService: BsModalService) {
   }
 
   ngOnInit(): void {
@@ -49,9 +46,9 @@ export class UserManagementComponent implements OnInit {
     this.bsModalRef.onHide?.subscribe({
       next: () => {
         const selectedRoles = this.bsModalRef.content?.selectedRoles;
-        if (!this.arrayEqual(selectedRoles, user.roles)) {
+        if (!this.arrayEqual(selectedRoles!, user.roles)) {
           // now we make a call to our API
-          this.adminService.updateUserRoles(user.username, selectedRoles).subscribe({
+          this.adminService.updateUserRoles(user.username, selectedRoles!).subscribe({
             next: roles => user.roles = roles
           })
         }

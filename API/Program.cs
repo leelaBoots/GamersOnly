@@ -1,4 +1,5 @@
 using API.Entities;
+using API.SignalR;
 using Microsoft.AspNetCore.Identity;
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -27,7 +28,8 @@ app.UseMiddleware<ExceptionMiddleware>();
 // redirect http to https request
 app.UseHttpsRedirection();
 
-app.UseCors(builder => builder.AllowAnyHeader()
+app.UseCors(builder => builder
+  .AllowAnyHeader()
   .AllowAnyMethod()
   .AllowCredentials()
   .WithOrigins("https://localhost:4200")); // placement of this after routing and before authorization is important
@@ -39,9 +41,9 @@ app.UseAuthorization();
 //app.UseStaticFiles();
 
 app.MapControllers();
-// will implement this later in lesson when we use SignalR
-//app.MapHub<PresenceHub>("hubs/presence");
-//app.MapHub<MessageHub>("hubs/message");
+// SignalR
+app.MapHub<PresenceHub>("hubs/presence");
+app.MapHub<MessageHub>("hubs/message");
 //app.MapFallbackToController("Index", "Fallback");
 
 //AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior, true");
@@ -56,6 +58,15 @@ try {
     // automatically recreate our database if it is dropped
     // also allows us to just restart app to apply any migrations
     await context.Database.MigrateAsync();
+
+    // we need to clear out all message group connections from DB, just in case the spplication had to restart
+    // this works for small scale, but not good if there are thousands of entries
+    //context.Connections.RemoveRange(context.Connections);
+    // becareful with this approach, we are modifying database without using Entity Framework
+    // this SQL command does not work in SQLite so...
+    //await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE [Connections]");
+    await context.Database.ExecuteSqlRawAsync("DELETE FROM [Connections]"); // SQLite
+
     // seed our database with our json file containing fake data
     await Seed.SeedUsers(userManager, roleManager);
 }
