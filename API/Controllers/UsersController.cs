@@ -19,16 +19,16 @@ namespace API.Controllers
     [Authorize]
     public class UsersController : BaseApiController
     {
-        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IPhotoService _photoService;
+        private readonly IUnitOfWork _uow;
 
         // make use of our UserRepository class
-        public UsersController(IUserRepository userRepository, IMapper mapper, IPhotoService photoService)
+        public UsersController(IUnitOfWork uow, IMapper mapper, IPhotoService photoService)
         {
+          _uow = uow;
           _photoService = photoService;
           _mapper = mapper;
-          _userRepository = userRepository;
         }
 
         // api/users/
@@ -38,15 +38,21 @@ namespace API.Controllers
         and it should be able to match them up in userParams */
         public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery]UserParams userParams)
         {
-            var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
-            userParams.CurrentUsername = user.UserName;
+            // we dont need to get the entire user
+            // var user = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUsername());
+            var gender = await _uow.UserRepository.GetUserGender(User.GetUsername());
+
+            // We dont need to get the user just to get the UserName, we can just get it from the token
+            //userParams.CurrentUsername = user.UserName;
+
+            userParams.CurrentUsername = User.GetUsername();
 
             // if gender pref is not passed in params, then set it to opposite gender by default
             if (string.IsNullOrEmpty(userParams.Gender)) {
-              userParams.Gender = user.Gender == "male" ? "female" : "male";
+              userParams.Gender = gender == "male" ? "female" : "male";
             }
 
-            var users = await _userRepository.GetMembersAsync(userParams); // await gets results of a Task
+            var users = await _uow.UserRepository.GetMembersAsync(userParams); // await gets results of a Task
 
             // we always have access to our Response inside the controllers 
             Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
@@ -60,20 +66,20 @@ namespace API.Controllers
         [HttpGet("{username}", Name = "GetUser")]
         public async Task<ActionResult<MemberDto>> GetUser(string username)
         {
-            return await _userRepository.GetMemberAsync(username);
+            return await _uow.UserRepository.GetMemberAsync(username);
         }
 
         [HttpPut]
         public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto) {
             // get the user from the user repository
-            var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+            var user = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUsername());
             // AutoMapper: this saves us from manually mapping out dto to our user object. Map has tons of overloads for different types of objects
             _mapper.Map(memberUpdateDto, user);
             // this flags the user as updated, to prevent us getting an exception when coming back from updating our database
-            _userRepository.Update(user);
+            _uow.UserRepository.Update(user);
 
             // we dont need to send any content back for a put request
-            if (await _userRepository.SaveAllAsync()) return NoContent();
+            if (await _uow.Complete()) return NoContent();
 
             // default if SaveAllAsync() fails
             return BadRequest("Failed to update user");
@@ -83,7 +89,7 @@ namespace API.Controllers
         [HttpPost("add-photo")]
         public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file) {
           // getting user includes the photos
-          var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+          var user = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUsername());
 
           var result = await _photoService.AddPhotoAsync(file);
 
@@ -101,7 +107,7 @@ namespace API.Controllers
 
           user.Photos.Add(photo);
 
-          if (await _userRepository.SaveAllAsync()) {
+          if (await _uow.Complete()) {
             // map our photo into a PhotoDto for return purposes
             // createdAtRoute overload takes a Route name string, the username as an object, and an object (the photo in this case)
             // we have to do this but the GetUser route requires a parameter in this case it a username
@@ -117,7 +123,7 @@ namespace API.Controllers
         public async Task<ActionResult> SetMainPhoto(int photoId)
         {
           // when we get the username from the token, its been authenticated to this method so we can trust that the uses name is correct
-          var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+          var user = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUsername());
 
           // not async, we already  have user in memory. no need to hit database. look for photo with matching ID
           var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
@@ -129,7 +135,7 @@ namespace API.Controllers
           photo.IsMain = true;
 
           // this returns a good status 204 with no message/content
-          if (await _userRepository.SaveAllAsync()) { return NoContent(); }
+          if (await _uow.Complete()) { return NoContent(); }
 
           return BadRequest("Failed to set main photo");
         }
@@ -137,7 +143,7 @@ namespace API.Controllers
         [HttpDelete("delete-photo/{photoId}")]
         // when we delete a resource, we dont need to send anything back to the client 
         public async Task<ActionResult> DeletePhoto(int photoId) {
-          var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+          var user = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUsername());
 
           var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
 
@@ -153,7 +159,7 @@ namespace API.Controllers
 
           user.Photos.Remove(photo);
 
-          if (await _userRepository.SaveAllAsync()) return Ok();
+          if (await _uow.Complete()) return Ok();
 
           return BadRequest("Failed to delete the photo");
 
