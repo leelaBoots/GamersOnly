@@ -21,8 +21,11 @@ export class NavComponent implements OnInit {
 
   // tslint:disable-next-line: typedef
   login() {
-    this.accountService.login(this.model).subscribe(response => {
-      this.router.navigateByUrl('/members');
+    this.accountService.login(this.model).subscribe({
+      next: _ => {
+        this.router.navigateByUrl('/members');
+        this.model = {}; // this sets model to empty object, so it clears out the username/password in the nav bar
+      }
     })
   }
 

@@ -22,10 +22,10 @@ namespace API.Helpers
       var userId = resultContext.HttpContext.User.GetUserId();
 
       // this has one jobm to update one property LastActive
-      var repo = resultContext.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
-      var user = await repo.GetUserByIdAsync(userId);
+      var uow = resultContext.HttpContext.RequestServices.GetRequiredService<IUnitOfWork>();
+      var user = await uow.UserRepository.GetUserByIdAsync(userId);
       user.LastActive = DateTime.UtcNow;
-      await repo.SaveAllAsync(); // update the database with this line
+      await uow.Complete(); // update the database with this line
 
       
     }
