@@ -13,6 +13,15 @@ namespace API.Data
 {
     public class Seed
     {
+        public static async Task ClearConnections(DataContext context) {
+          // this way of deleting th econnections would be ineficient if we had thousands of rows. truncating the table directly would be faster, but would
+          // have to make raw sql commands directly to the database which can be frowned upon
+          context.Connections.RemoveRange(context.Connections);
+          await context.SaveChangesAsync();
+
+        }
+
+
         // the logic to get the data out of the seed json file and into our database.
         // it is recommended that we call this method from the Program.cs class to seed data
         public static async Task SeedUsers(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager) {
@@ -44,6 +53,10 @@ namespace API.Data
                 // using AspNetCore.Identity to handle this now.
                 //user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Password"));
                 //user.PasswordSalt = hmac.Key;
+
+                // need to specify these dates from Seed data as Utc because Postgres requires it
+                user.Created = DateTime.SpecifyKind(user.Created, DateTimeKind.Utc);
+                user.LastActive = DateTime.SpecifyKind(user.LastActive, DateTimeKind.Utc);
 
                 // this creates and saves the changes in the database so we dont need to call the SaveChangesAsync() method anymore after this
                 await userManager.CreateAsync(user, "Pa$$w0rd");

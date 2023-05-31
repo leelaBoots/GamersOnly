@@ -18,10 +18,12 @@ namespace API.Extensions
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);  // needs the location of the AutoMapperProfile assemblies
             services.AddScoped<LogUserActivity>();
+            /*
+            // This is moved to program class after deploying to fly.io
             services.AddDbContext<DataContext>(options =>
             {
-                options.UseSqlite(config.GetConnectionString("DefaultConnection"));
-            });
+                options.UseNpgsql(config.GetConnectionString("DefaultConnection"));
+            });*/
             services.AddSignalR();
             services.AddSingleton<PresenceTracker>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
