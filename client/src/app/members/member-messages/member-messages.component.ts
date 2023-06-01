@@ -17,6 +17,7 @@ export class MemberMessagesComponent implements OnInit {
   //@Input() messages: Message[] = [];
   
   messageContent = '';
+  loading = false;
 
   constructor(public messageService: MessageService) { }
 
@@ -25,13 +26,14 @@ export class MemberMessagesComponent implements OnInit {
 
   sendMessage() {
     if (!this.username) return;
+    this.loading = true;
 
     // because we are returning a promise, we can use "then" instead of "subscribe"
     // we dont need to do anything with the message we get back, our messageTHread observable handles that
     // we just need to reset the form
     this.messageService.sendMessage(this.username, this.messageContent).then(() => {
       this.messageForm?.reset();
-    })
+    }).finally(() => this.loading = false);
   }
 
 }
