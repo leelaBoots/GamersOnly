@@ -86,7 +86,7 @@ try {
     // also allows us to just restart app to apply any migrations
     await context.Database.MigrateAsync();
 
-    // we need to clear out all message group connections from DB, just in case the spplication had to restart
+    // we need to clear out all message group connections from DB, just in case the application had to restart
     // this works for small scale, but not good if there are thousands of entries
     //context.Connections.RemoveRange(context.Connections);
     // becareful with this approach, we are modifying database without using Entity Framework
