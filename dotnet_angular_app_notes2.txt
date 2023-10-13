@@ -18,7 +18,7 @@ Password:    UiueHpBIZRFBF5t
 Hostname:    silent-snowflake-5507-db.internal
 Flycast:     fdaa:2:40d5:0:1::2
 Proxy port:  5432
-Postgres port:  5433
+Postgres port:  5432
 Connection string: postgres://postgres:UiueHpBIZRFBF5t@silent-snowflake-5507-db.flycast:5432
   
 DATABASE_URL=postgres://silent_snowflake_5507:w6O8YWAnOH1lfpx@silent-snowflake-5507-db.flycast:5432/silent_snowflake_5507?sslmode=disable
@@ -79,7 +79,7 @@ LESSON 6:
   > dotnet --info
   > dontnet new -h  (lists all the TEMPLATE types. there is one for ANGULAR. but we will just use WEBAPI, to keep API separate from angular project)
   
-  > dotnet new sln  (creates a solution file with the name of the containing folder, can be opened in IDE
+  > dotnet new sln  (creates a solution file with the name of the containing folder, can be opened in IDE)
 
   > dotnet new webapi -o API     (creates the project and new folder)
   
@@ -90,7 +90,7 @@ LESSON 7:   XXX
   DemoAppAPI> code .  (this will open up the project in VS Code, if it doesn't work, you need to add VS code to the path in your windows environment)
 
   In VS Code we need to install some extensions to make dotnet app development easier.
-  1. C# for Visual Studio Code powered by OmniSharp (sytax highlight, intelliSense, debugger etc.
+  1. C# for Visual Studio Code powered by OmniSharp (sytax highlight, intelliSense, debugger etc.)
      click Yes in pop up to add assets to DemoApp project
   2. C# Extensions by JosCreativ
   3. Material Icon Theme
@@ -1022,3 +1022,91 @@ LESSON 258. Fixing the issues with the message thread
 
 LESSON 259. Automating the deployment
 
+
+SETUP NOTES ( after cloning project into new environment):
+1. install dotnet sdk 7
+2. datingapp> dotnet dev-certs https --trust
+3. extensions: nuget gallery
+  a. install microsoft.entityframeworkcore.sqlite
+  b. install microsoft.entityframeworkcore.design
+4. API> dotnet tool install --global dotnet-ef --version 7.0.9
+5. API> dotnet ef database update
+6. datingapp> npm install -g @angular/cli@16
+  a. had to make sure version of angular was compatible with version of node
+8. admin> set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+9. admin> Get-ExecutionPolicy
+  a. need this so that i can actually run the ng scripts
+10. Error: Could not find the '@angular-devkit/build-angular:dev-server' builder's node package.
+  a. had to uninstall/reinstall build-angular
+  b. npm uninstall @angular-devkit/build-angular
+  c. npm install --save-dev @angular-devkit/build-angular
+11. install docker desktop onto my windows machine
+  a. docker desktop unable to run on my machine because Hyper-V not avaible option on windows 10 personal
+  b. use WSL, enable it in windows settings and install via powershell
+12. install vs code extension: postgresql by Chris Kolkman
+13. install vs code extension: docker
+14. datingapp> docker run --name postgres -e POSTGRES_PASSWORD=postgrespw -p 5432:5432 -d postgres:latest
+15. API> docker run --rm -it -p 8080:80 macross2/datingapp:latest
+  a. Unhandled exception. System.NullReferenceException: Object reference not set to an instance of an object.
+16. powershell> powershell -Command "iwr https://fly.io/install.ps1 -useb | iex"
+  a. run this in a powershell command window to install fly.io
+16. DatingApp> C:\Users\robot\.fly\bin\flyctl.exe auth login
+17. Datingapp> C:\Users\robot\.fly\bin\fly.exe deploy
+  a. adding fly to path is not working
+  b. removed current fly by deleting the folder C:\Users\robot\.fly
+  c. reinstalled using powerscript from fly.io install page: DatingApp> iwr https://fly.io/install.ps1 -useb | iex
+  d. now im able to use fly and flyctl commands
+18. API> docker build -t macross2/datingapp .
+19. docker run --rm -it -p 8080:80 macross2/datingapp:latest
+  a. got error in Program.cs, i think its because DATABASE_URL does not exist.
+  b. im going to redo Lesson 255: changing the database 
+22. DatingApp> fly launch --image macross2/datingapp:latest
+23. next had to copy my old appsettings.json file because it was ignored and not in the repository
+24. updated fly.toml
+25. DatingApp> fly secrets set CloudinarySettings__ApiSecret=pGW6W5WgiT9eaITCZvysQLGWpZ4
+26. generate a new password for TokenKey using generator
+  a. DatingApp> fly secrets set TokenKey=jcQBVW6MsvErRf4wTLmDDK4vZpcIqsZG
+27. API> docker build -t macross2/datingapp .
+28. API> docker push macross2/datingapp:latest
+29. datingapp> fly deploy
+
+How to run app on local machine with new postgres database running in a docker container
+NOTE: We will use the appsettings.json file 
+1. open docker desktop
+2. datingapp> docker run --name postgres -e POSTGRES_PASSWORD=postgrespw -p 5432:5432 -d postgres:latest
+3. API> dotnet run
+
+Production release to Fly.io:
+NOTE: The error in program.cs when running prod version of app was caused by not setting up the DB when i ran fly launch.
+1. We will NOT use the appsettings.json file (we wont be using this for full production release via fly). When we launch to fly, we choose to setup a DB
+  and fly creates the database on its servers, it returns a DATABASE_URL, that is then read in program.cs when we run the app.
+ a. make sure this line is in the json file:
+ b. "DefaultConnection": "Server=host.docker.internal; Port=5432; User Id=postgres; Password=postgrespw; Database=datingapp"
+2. DatingApp> fly launch --image macross2/datingapp:latest
+  a. choose to setup database
+  b. choose the development option (free, 1 machine)
+  c. choose N to Redis
+    Postgres cluster little-flower-981-db created
+    Username:    postgres
+    Password:    lt8WMgAWC3SOlGr
+    Hostname:    little-flower-981-db.internal
+    Flycast:     fdaa:2:40d5:0:1::4
+    Proxy port:  5432
+    Postgres port:  5433
+    Connection string: postgres://postgres:lt8WMgAWC3SOlGr@little-flower-981-db.flycast:5432
+  d. update the fly.toml file by includeing the env variables
+  e. update Dockerfile by  exposing port 8080
+3. DatingApp> fly secrets set CloudinarySettings__ApiSecret=pGW6W5WgiT9eaITCZvysQLGWpZ4
+4. DatingApp> fly secrets set TokenKey=jcQBVW6MsvErRf4wTLmDDK4vZpcIqsZG
+5. API> docker build -t macross2/datingapp .
+6. API> docker push macross2/datingapp:latest
+7. DatingApp> fly deploy  (success!! finally)
+
+
+
+DEPLOYMENT NOTES:
+1. For production, we will host the angular app from the API server. we could host the 2 apps from different servers if we wanted.
+  a. configure API to serve static files in program.cs
+2. to create a production build for angular (this will create an executable with smaller file size because it strips out compilers and stuff)
+  a. client> ng build
+  b. this creates the angular app inside the wwwroot folder in the API

@@ -1,10 +1,10 @@
-# fly.toml app configuration file generated for silent-snowflake-5507 on 2023-05-26T11:47:33-07:00
+# fly.toml app configuration file generated for little-flower-981 on 2023-10-10T22:26:09-07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "silent-snowflake-5507"
-primary_region = "lax"
+app = "little-flower-981"
+primary_region = "sjc"
 
 [build]
   image = "macross2/datingapp:latest"
@@ -20,3 +20,4 @@ primary_region = "lax"
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
+  processes = ["app"]

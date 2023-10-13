@@ -3,9 +3,9 @@ name: docker-push
 on:
   workflow_dispatch:
   # usually we would checkout a new branch before pushing to main. this is just for training course purposes
-  push:
-    branches:
-      - 'main'
+  #push:
+  #  branches:
+  #    - 'main'
 
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

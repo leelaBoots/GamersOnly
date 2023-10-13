@@ -9,11 +9,11 @@ import { MemberDetailComponent } from './members/member-detail/member-detail.com
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
-import { AuthGuard } from './_guards/auth.guard';
-import { PreventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
-import { MemberDetailedResolver } from './_resolvers/member-detailed.resolver';
+import { authGuard } from './_guards/auth.guard';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
-import { AdminGuard } from './_guards/admin.guard';
+import { memberDetailedResolver } from './_resolvers/member-detailed.resolver';
+import { preventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
+import { adminGuard } from './_guards/admin.guard';
 
 /* we will use this array to tell angular about the routes we created */
 const routes: Routes = [
@@ -21,15 +21,15 @@ const routes: Routes = [
   {
     path: '',
     runGuardsAndResolvers: 'always',
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
     children: [
       {path: 'members', component: MemberListComponent},
       // resolver will get the propery we need from our route, instead of our memberDetailService
-      {path: 'members/:username', component: MemberDetailComponent, resolve: {member: MemberDetailedResolver}},
-      {path: 'member/edit', component: MemberEditComponent, canDeactivate: [PreventUnsavedChangesGuard]},
+      {path: 'members/:username', component: MemberDetailComponent, resolve: {member: memberDetailedResolver}},
+      {path: 'member/edit', component: MemberEditComponent, canDeactivate: [preventUnsavedChangesGuard]},
       {path: 'lists', component: ListsComponent},
       {path: 'messages', component: MessagesComponent},
-      {path: 'admin', component: AdminPanelComponent, canActivate: [AdminGuard]}
+      {path: 'admin', component: AdminPanelComponent, canActivate: [adminGuard]}
     ]
   },
   {path: 'errors', component: TestErrorsComponent},

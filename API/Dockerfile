@@ -1,4 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+
+# this sets the working directory that this container starts in
 WORKDIR /app
 # must expose the port fly.io uses to run health checks on docker
 EXPOSE 8080
