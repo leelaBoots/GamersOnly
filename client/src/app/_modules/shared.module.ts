@@ -25,7 +25,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     TabsModule.forRoot(),
     NgxGalleryModule,
     NgxSpinnerModule.forRoot({
-      type: 'line-scale-party'
+      type: 'pacman'
     }),
     FileUploadModule,
     BsDatepickerModule.forRoot(),

@@ -1110,3 +1110,10 @@ DEPLOYMENT NOTES:
 2. to create a production build for angular (this will create an executable with smaller file size because it strips out compilers and stuff)
   a. client> ng build
   b. this creates the angular app inside the wwwroot folder in the API
+
+Current Development Setup:
+1. Hook up the API to use Sqlite (Postrges requires docker desktop to be running, and that takes a long time)
+  drop the database, delete the migrations folder, update appseting.Developmetn.json, Program.cs, ApplicationServiceExtensions
+2. Angular continues to run bundled with the API and on the same local server, but I am also able to run >ng serve now so that it runs on
+   https://localhost:4200 ( i had to do lesson 28, install choco, install mkcert, and create new certificates, this seemed to fix it.). Now i can 
+   run the api, and the front end runs on both 5001 and 4200 ports simultaneouly, of course >ng serve is faster because i dont have to ng build everytime

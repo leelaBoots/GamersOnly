@@ -3,11 +3,11 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "little-flower-981"
+#app = "little-flower-981"
 primary_region = "sjc"
 
 [build]
-  image = "macross2/datingapp:latest"
+  image = "macross2/gamersonly:latest"
 
 [env]
   ASPNETCORE_URLS="http://+:8080"

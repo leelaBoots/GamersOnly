@@ -1,4 +1,5 @@
 {
+  "name": "GamersOnly",
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.2.5",
     "typescript": "4.9.3"

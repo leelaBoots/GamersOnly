@@ -1,12 +1,18 @@
 <div class="container mt-5">
     <div  *ngIf="!registerMode" style="text-align: center;">
         <h1>Find your match</h1>
+        <img src="{{'./assets/gamersonly288.png'}}" alt="GamersOnly Logo">
         <p class="lead">
-            Come on in to find your matches... all you need to do is sign up!
+            The only dating site for Gamers Only...
         </p>
         <div class="text-center">
             <button (click)="registerToggle()" class="btn btn-primary btn-lrg me-2">Register</button>
-            <button class="btn btn-info btn-lrg">Learn more</button>
+            <button class="btn btn-light btn-lrg">Learn more</button>
+        </div>
+        <div class="text-center text-box-md">
+            <p class="lead text-warning mt-5">
+            PLEASE NOTE: This is not a real dating site. This is a full stack application demo intended to illustrate the components of a modern technology stack. To learn about the tech stack used to create this application, click here. 
+            </p>
         </div>
     </div>
     <div *ngIf="registerMode" class="container">

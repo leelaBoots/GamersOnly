@@ -35,7 +35,7 @@
                 </div>
                 <div class="card-footer">
                     <!-- btn-block class makes button take up 100% width -->
-                    <button [disabled]="!editForm.dirty" form="editForm" type="submit" class="btn btn-success btn-block">Save Changes</button>
+                    <button [disabled]="!editForm.dirty" form="editForm" type="submit" class="btn btn-secondary btn-block">Save Changes</button>
                 </div>
     
             </div>
@@ -52,7 +52,7 @@
                         <textarea class="form-control" [(ngModel)]="member.introduction" name="introduction" rows="6"></textarea>
                         <h4 class="mt-2">Looking for</h4>
                         <textarea  class="form-control" [(ngModel)]="member.lookingFor" name="lookingFor" rows="6"></textarea>
-                        <h4 class="mt-2">Interests</h4>
+                        <h4 class="mt-2">Favorite Games</h4>
                         <textarea  class="form-control" [(ngModel)]="member.interests" name="interests" rows="6"></textarea>
                         <h4 class="mt-2">Location Details:</h4>
                         <div class="d-flex">
