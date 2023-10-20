@@ -14,7 +14,7 @@ namespace API.Data
     public class Seed
     {
         public static async Task ClearConnections(DataContext context) {
-          // this way of deleting th econnections would be ineficient if we had thousands of rows. truncating the table directly would be faster, but would
+          // this way of deleting the connections would be ineficient if we had thousands of rows. truncating the table directly would be faster, but would
           // have to make raw sql commands directly to the database which can be frowned upon
           context.Connections.RemoveRange(context.Connections);
           await context.SaveChangesAsync();

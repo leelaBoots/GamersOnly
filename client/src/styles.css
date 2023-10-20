@@ -13,7 +13,6 @@
   .member-tabset > .nav-tabs > li.open > a, .member-tabset > .nav-tabs > li:hover > a {
     border: 0;
     background: none !important;
-    color: #333333;
   }
   
   .member-tabset > .nav-tabs > li.open > a > i, .member-tabset > .nav-tabs > li:hover > a > i {
@@ -25,13 +24,12 @@
   }
   
   .member-tabset > .nav-tabs > li.active {
-    border-bottom: 4px solid #E95420;
+    border-bottom: 4px solid rgb(50, 251, 226);
     position: relative;
   }
   
   .member-tabset > .nav-tabs > li.active > a {
     border: 0 !important;
-    color: #333333;
   }
   
   .member-tabset > .nav-tabs > li.active > a > i {
@@ -40,9 +38,15 @@
   
   .member-tabset > .tab-content {
     margin-top: -3px;
-    background-color: #fff;
+    background-color: rgb(48, 17, 94);
     border: 0;
     border-top: 1px solid #eee;
-    padding: 15px 0;
+    padding: 15px;
+  }
+
+  .text-box-md {
+    width: 100%;
+    margin: auto;
+    max-width: 1000px;
   }
   

@@ -54,20 +54,33 @@ export class RegisterComponent implements OnInit {
 
   register() {
     // our register is a Form
-    //this.accountService.register(this.model).subscribe(response => { // old way
-    this.accountService.register(this.registerForm.value).subscribe(response => {
 
+    const dob = this.getDateOnly(this.registerForm.controls['dateOfBirth'].value);
+    const values = {...this.registerForm.value, dateOfBirth: dob};
+
+    //this.accountService.register(this.model).subscribe(response => { // old way
+    this.accountService.register(values).subscribe({
+      next: () => {
       // take us straight to the members page
-      this.router.navigateByUrl('/members');
-    }, error => {
-      this.validationErrors = error;
-      // this.toastr.error(error.error); // we dont need this because bad request will come back from interceptor
+      this.router.navigateByUrl('/members')
+      }, error: error => {
+        this.validationErrors = error
+        //this.toastr.error(error.error); // we dont need this because bad request will come back from interceptor
+      }
     })
   }
 
   cancel() {
     // what we want to emit when the cancel button is pressed
     this.cancelRegister.emit(false);
+  }
+
+  // this is to trim the time of of the dob date time from the datepicker module, because we want dateonly
+  private getDateOnly(dob: string | undefined) {
+    if (!dob) return;
+    let theDob = new Date(dob);
+    return new Date(theDob.setMinutes(theDob.getMinutes() - theDob.getTimezoneOffset()))
+      .toISOString().slice(0, 10);
   }
 
 }

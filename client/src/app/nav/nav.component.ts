@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AccountService } from '../_services/account.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-nav',
@@ -9,6 +10,7 @@ import { AccountService } from '../_services/account.service';
   styleUrls: ['./nav.component.css']
 })
 export class NavComponent implements OnInit {
+  public environment = environment;
   model: any = {}
 
   // accountService is public so that we can access it in the html template, even though nav.component.html is associated with this object
@@ -32,6 +34,10 @@ export class NavComponent implements OnInit {
   logout() {
     this.accountService.logout(); // call our accountService's logout method
     this.router.navigateByUrl('/'); // send back to homepage after logging out
+  }
+
+  onHomePage() {
+    return (this.router.url === '/');
   }
 
 }

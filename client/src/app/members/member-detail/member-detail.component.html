@@ -30,7 +30,7 @@
             <div class="card-footer">
                 <div class="btn-group d-flex">
                     <button class="btn btn-primary">Like</button>
-                    <button (click)="selectTab('Messages')" class="btn btn-success">Message</button>
+                    <button (click)="selectTab('Messages')" class="btn btn-secondary">Message</button>
                 </div>
             </div>
 
@@ -49,8 +49,8 @@
                 <h4>Looking for</h4>
                 <p>{{member.lookingFor}}</p>
             </tab>
-            <tab heading='Interests' (selectTab)="onTabActivated($event)">
-                <h4>Interests</h4>
+            <tab heading='Favorite Games' (selectTab)="onTabActivated($event)">
+                <h4>Favorite Games</h4>
                 <p>{{member.interests}}</p>
             </tab>
             <tab heading='Photos' (selectTab)="onTabActivated($event)">
