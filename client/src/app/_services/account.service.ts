@@ -27,6 +27,10 @@ export class AccountService {
   /* login() is going to receive the login credentials from our navbar login form */
   // tslint:disable-next-line: typedef
   login(model: User) {
+
+    // lets convert username to lowercase here before we send the request, so the username will not need to be case sensitive
+    model.username = model.username.toLowerCase();
+    
     /* because this is a post request, we are required to include a body, so we send our model as the body */
     /* anything in the pipe() is rxjs operator */
     return this.http.post(this.baseUrl + 'account/login', model).pipe(

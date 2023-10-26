@@ -19,6 +19,7 @@ export class NavComponent implements OnInit {
               private toastr: ToastrService) {}
 
   ngOnInit(): void {
+  
   }
 
   // tslint:disable-next-line: typedef

@@ -38,8 +38,11 @@ namespace API.Data
 
             // we dont want to return the users profile in the results, and also filter by gender
             var query = _context.Users.AsQueryable();
-            query = query.Where(u => u.UserName != userParams.CurrentUsername); 
-            query = query.Where(u => u.Gender == userParams.Gender);
+            query = query.Where(u => u.UserName != userParams.CurrentUsername);
+            if (userParams.Gender.ToLower() != "all") {
+                // only add gender to the query if its specifically male or female
+                query = query.Where(u => u.Gender == userParams.Gender);
+            }
 
             // calculate the date range via the min and max age params
             var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1));

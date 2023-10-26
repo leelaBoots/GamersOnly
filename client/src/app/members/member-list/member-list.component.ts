@@ -14,7 +14,7 @@ export class MemberListComponent implements OnInit {
   members: Member[];
   pagination: Pagination | undefined;
   userParams: UserParams | undefined;
-  genderList = [{value: 'male', display: 'Males'}, {value: 'female', display: 'Females'}]
+  genderList = [{value: 'all', display: 'All'}, {value: 'male', display: 'Males'}, {value: 'female', display: 'Females'}]
 
   // we're injecting our accountService beacuse we need access to the user
   constructor(private memberService: MembersService) { 
