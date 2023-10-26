@@ -47,9 +47,12 @@ namespace API.Controllers
 
             userParams.CurrentUsername = User.GetUsername();
 
-            // if gender pref is not passed in params, then set it to opposite gender by default
+            
             if (string.IsNullOrEmpty(userParams.Gender)) {
-              userParams.Gender = gender == "male" ? "female" : "male";
+              userParams.Gender = "all";
+              // this code was from original tutorial, lets just default to all
+              // if gender pref is not passed in params, then set it to opposite gender by default
+              //userParams.Gender = gender == "male" ? "female" : "male";
             }
 
             var users = await _uow.UserRepository.GetMembersAsync(userParams); // await gets results of a Task

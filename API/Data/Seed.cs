@@ -13,6 +13,7 @@ namespace API.Data
 {
     public class Seed
     {
+
         public static async Task ClearConnections(DataContext context) {
           // this way of deleting the connections would be ineficient if we had thousands of rows. truncating the table directly would be faster, but would
           // have to make raw sql commands directly to the database which can be frowned upon
@@ -59,7 +60,12 @@ namespace API.Data
                 user.LastActive = DateTime.SpecifyKind(user.LastActive, DateTimeKind.Utc);
 
                 // this creates and saves the changes in the database so we dont need to call the SaveChangesAsync() method anymore after this
-                await userManager.CreateAsync(user, "Pa$$w0rd");
+                if (user.UserName == "lisa") {
+                  // special case for user lisa from UserSeedData.json, use a simple password, this user is used for demos
+                  await userManager.CreateAsync(user, "Password");
+                } else {
+                  await userManager.CreateAsync(user, "Pa$$w0rd");
+                }
                 await userManager.AddToRoleAsync(user, "Member");
             }
 

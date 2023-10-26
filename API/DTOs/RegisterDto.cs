@@ -13,7 +13,7 @@ namespace API.DTOs
         [Required] public string Country { get; set; }
 
         [Required]
-        [StringLength(8, MinimumLength = 4)]
+        //[StringLength(50, MinimumLength = 8)] // overkill, lets let Identity handle this
         public string Password { get; set; }
     }
 }

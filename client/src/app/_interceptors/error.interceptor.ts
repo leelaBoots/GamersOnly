@@ -3,12 +3,13 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor
+  HttpInterceptor,
+  HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { catchError } from 'rxjs/operators';
+import { catchError, filter, map } from 'rxjs/operators';
 
 // this class will allow us to do some error handling on the front-end and display toastr messages etc.
 // this will handle all types of http response errors in one place
@@ -16,15 +17,20 @@ import { catchError } from 'rxjs/operators';
 // Injectable status
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
+  err: string;
   // we also need to provide this interceptor in our app module
 
   constructor(private router: Router, private toastr: ToastrService) {}
 
   // we can intercept the request, or the response (next)
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    // pipe is needed to transform or modify an observable 
     return next.handle(request).pipe(
-      catchError(error => {
-        if (error) {
+      
+      catchError((error: HttpErrorResponse) => {
+        if (error.error instanceof Error) {
+          this.toastr.error(error.error.message);
+        } else if (error) {
           switch (error.status) {
             case 400:
               // this looks weird, but it matches the structure of the object retured in the response 
@@ -40,12 +46,26 @@ export class ErrorInterceptor implements HttpInterceptor {
                 }
                 throw modalStateErrors.flat();
               } else {
-                // this handles a normal 400 response
-                this.toastr.error(error.statusText, error.status);
+                if (Array.isArray(error.error)) {
+                  // this handles a normal 400 response
+                  if(error.error[0].description) {
+                    // if there is a description in the json, just print that
+                    this.toastr.error(error.error[0].description);
+                  } else {
+                    // otherwise just stringify the whole JSON object, since we don't know whats in there
+                    this.toastr.error(JSON.stringify(error.error[0]));
+                  }
+                } else {
+                  this.toastr.error(error.error);
+                }
               }
               break;
             case 401:
-              this.toastr.error(error.statusText, error.status);
+              if (error.error) {
+                this.toastr.error(error.error);
+              } else {
+                this.toastr.error(error.statusText, error.status.toString());
+              }
               break;
             case 404:
               this.router.navigateByUrl('/not-found');
