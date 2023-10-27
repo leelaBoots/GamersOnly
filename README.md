@@ -46,6 +46,6 @@ Example appsettings.Development.json file:
     "PostgresConnection": "Server=localhost; Port=5432; User Id=[ID]; Password=[PASSWORD]; Database=datingapp"
     
   },
-  "TokenKey": "super secret unguessable key"
+  "TokenKey": "[secretkey]"
 }
 
