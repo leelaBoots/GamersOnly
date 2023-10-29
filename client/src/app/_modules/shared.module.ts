@@ -11,6 +11,7 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { TimeagoModule } from 'ngx-timeago';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /* ng generate automatically imports the CommonModule. This is fine, every angular module needs this */
 // Angular bootstrap modules require specifying for root
@@ -32,7 +33,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     PaginationModule.forRoot(),
     ButtonsModule.forRoot(),
     TimeagoModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    TooltipModule.forRoot()
   ],
   // we have to export modules as well because we are using a 'shared' module
   exports: [
@@ -46,7 +48,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     PaginationModule,
     ButtonsModule,
     TimeagoModule,
-    ModalModule
+    ModalModule,
+    TooltipModule
   ]
 })
 export class SharedModule { }

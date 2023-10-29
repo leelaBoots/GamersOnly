@@ -1,20 +1,20 @@
 <div class="container mt-5">
     <div  *ngIf="!registerMode" style="text-align: center;">
         <h1>Find your match</h1>
-        <img src="{{'./assets/gamersonly36.png'}}" style="width:288px;height:288px;" class="pixelated" alt="GamersOnly Logo">
+        <img src="{{'./assets/gamersonly36.png'}}" style="width:288px;height:288px;" class="pixelated" placement="left" tooltip="Hand made pixel art">
         <p class="lead">
             The only dating site for Gamers Only...
         </p>
         <div class="text-center">
-            <button (click)="registerToggle()" class="btn btn-primary btn-lrg me-2">Register</button>
+            <button (click)="registerToggle()" class="btn btn-primary btn-lrg me-2" placement="left" tooltip="Registration uses ASP.NET Identity">Register</button>
             <button class="btn btn-light btn-lrg">Learn more</button>
         </div>
         <div class="text-center text-box-md">
             <p class="lead text-warning mt-5">
             PLEASE NOTE: This is not a real dating site. This is a full stack application demo intended to illustrate the components of a modern technology stack. To learn about the tech stack used to create this application, click here. 
             </p>
-            <p class="lead text-info mt-5">
-            To login with a test user enter Username: lisa   Password: Password</p>
+            <p class="lead text-body mt-5">
+            To login with a test user enter Username: <span class="text-warning">Lisa</span>   Password: <span class="text-warning">Password</span></p>
         </div>
     </div>
     <div *ngIf="registerMode" class="container">

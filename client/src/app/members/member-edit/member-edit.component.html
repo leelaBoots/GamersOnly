@@ -15,7 +15,7 @@
             <div class="card">
                 <img src="{{member.photoUrl || './assets/user.png'}} " alt="{{member.knownAs}}" 
                     class="card-img-top img-thumbnail">
-                <div class="card-body">
+                <div class="card-body" tooltip="Saving user details will update PostgreSQL database.">
                     <div>
                         <strong>Location:</strong>
                         <p>{{member.city}}, {{member.country}}</p>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="card-footer">
                     <!-- btn-block class makes button take up 100% width -->
-                    <button [disabled]="!editForm.dirty" form="editForm" type="submit" class="btn btn-secondary btn-block">Save Changes</button>
+                    <button [disabled]="!editForm.dirty" form="editForm" type="submit" class="btn btn-secondary btn-block" tooltip="Saving user details will update PostgreSQL database.">Save Changes</button>
                 </div>
     
             </div>
@@ -65,7 +65,7 @@
                     
                 </tab>
                 <tab heading='Edit Photos'>
-                    <app-photo-editor [member]="member"></app-photo-editor>
+                    <app-photo-editor [member]="member" tooltip="Photos stored on cloud service via Cloudinary"></app-photo-editor>
                 </tab>
             </tabset>
         </div>
