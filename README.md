@@ -1,7 +1,7 @@
 
 Description
 
-Welcome to my project! This is a Dating App made in ASP.NET Core framework with an Angular front end. 
+Welcome to my project! This is a Full Stack Dating App made with ASP.NET Core framework and an Angular front end. 
 
 Features:
 

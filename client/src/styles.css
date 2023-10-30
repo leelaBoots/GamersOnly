@@ -58,6 +58,8 @@ label {
   margin-top: 5px;
 }
 
+
+/* homepage logo */
 .pixelated {
   image-rendering: -moz-crisp-edges;
   image-rendering: -o-crisp-edges;
@@ -66,9 +68,11 @@ label {
   image-rendering: pixelated;
 }
 
+/* tooltips */
+
 .tooltip { 
   position:absolute;
-  /*z-index:1070;*/
+  z-index:1070;
   display:block;
   margin:0;
   margin-right: 20px;
@@ -95,4 +99,33 @@ label {
 .tooltip-inner {
   color: var(--bs-pink) !important;
 }
+
+/* techstack page */
+
+.box {
+  border: 1px solid var(--bs-pink);
+  padding: 20px;
+  margin: 15px;
+}
+
+.box.sm {
+  width: 340px;
+  min-height: 205px;
+}
+
+img.stack {
+  margin: 20px;
+}
+
+.flex-container {
+  display: flex;
+}
+
+.flex-child {
+  flex: 1;
+}  
+
+.flex-child:first-child {
+  margin-right: 20px;
+} 
 

@@ -49,23 +49,23 @@
                     <form #editForm="ngForm" id="editForm" (ngSubmit)="updateMember()">
                         <!-- ngModel gives us the binding, but the name property must also match the member property we are looking for -->
                         <h4>Description</h4>
-                        <textarea class="form-control" [(ngModel)]="member.introduction" name="introduction" rows="6"></textarea>
+                        <textarea class="form-control" [(ngModel)]="member.introduction" name="introduction" rows="6" tooltip="Click to edit"></textarea>
                         <h4 class="mt-2">Looking for</h4>
-                        <textarea  class="form-control" [(ngModel)]="member.lookingFor" name="lookingFor" rows="6"></textarea>
+                        <textarea  class="form-control" [(ngModel)]="member.lookingFor" name="lookingFor" rows="6" tooltip="Click to edit"></textarea>
                         <h4 class="mt-2">Favorite Games</h4>
-                        <textarea  class="form-control" [(ngModel)]="member.interests" name="interests" rows="6"></textarea>
+                        <textarea  class="form-control" [(ngModel)]="member.interests" name="interests" rows="6" tooltip="Click to edit"></textarea>
                         <h4 class="mt-2">Location Details:</h4>
                         <div class="d-flex">
                             <label for="city">City: </label>
-                            <input [(ngModel)]="member.city" type="text" name="city" class="form-control mx-2">
+                            <input [(ngModel)]="member.city" type="text" name="city" class="form-control mx-2" tooltip="Click to edit">
                             <label for="country">Country: </label>
-                            <input [(ngModel)]="member.country" type="text" name="country" class="form-control mx-2">
+                            <input [(ngModel)]="member.country" type="text" name="country" class="form-control mx-2" tooltip="Click to edit">
                         </div>
                     </form>
                     
                 </tab>
                 <tab heading='Edit Photos'>
-                    <app-photo-editor [member]="member" tooltip="Photos stored on cloud service via Cloudinary"></app-photo-editor>
+                    <app-photo-editor [member]="member" ></app-photo-editor>
                 </tab>
             </tabset>
         </div>
