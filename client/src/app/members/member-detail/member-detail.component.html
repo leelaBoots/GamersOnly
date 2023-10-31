@@ -29,7 +29,7 @@
             </div>
             <div class="card-footer">
                 <div class="btn-group d-flex">
-                    <button class="btn btn-primary" tooltip="Like feature implemented using a join table between Users">Like</button>
+                    <button (click)="addLike(member)" class="btn btn-primary" tooltip="Like feature implemented using a join table between Users">Like</button>
                     <button (click)="selectTab('Messages')" class="btn btn-secondary" tooltip="Message Hub implemented using SignalR for real-time messaging">Message</button>
                 </div>
             </div>

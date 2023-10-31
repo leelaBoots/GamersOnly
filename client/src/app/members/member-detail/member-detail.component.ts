@@ -9,6 +9,8 @@ import { User } from 'src/app/_models/user';
 import { AccountService } from 'src/app/_services/account.service';
 import { MessageService } from 'src/app/_services/message.service';
 import { PresenceService } from 'src/app/_services/presence.service';
+import { ToastrService } from 'ngx-toastr';
+import { MembersService } from 'src/app/_services/members.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -27,7 +29,7 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   user?: User;
 
   constructor(private accountService: AccountService, private route: ActivatedRoute, private messageService: MessageService,
-    public presenceService: PresenceService) { 
+    public presenceService: PresenceService, private memberService: MembersService, private toastr: ToastrService) { 
       this.accountService.currentUser$.pipe(take(1)).subscribe({
         next: user => {
           if (user) this.user = user;
@@ -76,6 +78,12 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
       })
     }
     return imageUrls;
+  }
+
+  addLike(member: Member) {
+    this.memberService.addLike(member.username).subscribe({
+      next: () => this.toastr.success('You have liked ' + member.knownAs)
+    })
   }
 
   // we dont use this method anymore, because we are getting the member from the route, before whatever element is constructed
