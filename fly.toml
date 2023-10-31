@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for throbbing-wind-512 on 2023-10-30T22:54:15-07:00
+# fly.toml app configuration file generated for gamers-only on 2023-10-31T12:34:03-07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "throbbing-wind-512"
+app = "gamers-only"
 primary_region = "sjc"
 
 [build]
