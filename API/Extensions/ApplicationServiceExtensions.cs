@@ -19,18 +19,18 @@ namespace API.Extensions
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);  // needs the location of the AutoMapperProfile assemblies
             services.AddScoped<LogUserActivity>();
             
-            /*
-            // This is moved to program class after deploying to fly.io
-            services.AddDbContext<DataContext>(options =>
+            
+            // OLD PostGreSQL connection, moved to program class after deploying to fly.io
+            /*services.AddDbContext<DataContext>(options =>
             {
                 options.UseNpgsql(config.GetConnectionString("DefaultConnection"));
             });*/
 
-            // This is simple sqlite database is used during development, must update appsettings.Development.json as well
-            services.AddDbContext<DataContext>(opt =>
+            // This is a simple sqlite database used during development, must update appsettings.Development.json as well
+            /*services.AddDbContext<DataContext>(opt =>
             {
                 opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
-            });
+            });*/
 
             services.AddSignalR();
             services.AddSingleton<PresenceTracker>();

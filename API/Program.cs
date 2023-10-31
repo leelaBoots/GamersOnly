@@ -26,7 +26,7 @@ builder.Services.AddSignalR();
 
 //Config.EnableCors(cors);
 
-/* // Comment all this stuff out while using the sqlite DB
+// Comment all this stuff out while using the sqlite DB
 var connString = "";
 if (builder.Environment.IsDevelopment()) 
     connString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -53,7 +53,7 @@ builder.Services.AddDbContext<DataContext>(opt =>
 {
     opt.UseNpgsql(connString);
 });
-*/
+
 
 // configure the http request pipeline
 
@@ -103,11 +103,11 @@ try {
     // this works for small scale, but not good if there are thousands of entries
     //context.Connections.RemoveRange(context.Connections);
     // becareful with this approach, we are modifying database without using Entity Framework
-    // this SQL command does not work in SQLite so...
+    // this SQL command does not work in SQLite:
     //await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE [Connections]");
 
-    await context.Database.ExecuteSqlRawAsync("DELETE FROM [Connections]"); // This line is for SQLite
-    //await Seed.ClearConnections(context);  // This line is for Postgres
+    //await context.Database.ExecuteSqlRawAsync("DELETE FROM [Connections]"); // This line is for SQLite
+    await Seed.ClearConnections(context);  // This line is for Postgres
 
     // seed our database with our json file containing fake data
     await Seed.SeedUsers(userManager, roleManager);
