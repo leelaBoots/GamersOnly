@@ -13,6 +13,7 @@ namespace API.Extensions
     {
         // this extends the IServiceCollection with our own stuff Lesson 45.
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config) {
+            services.AddCors();
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPhotoService, PhotoService>();

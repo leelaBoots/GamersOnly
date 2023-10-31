@@ -1,18 +1,18 @@
-# fly.toml app configuration file generated for little-flower-981 on 2023-10-10T22:26:09-07:00
+# fly.toml app configuration file generated for throbbing-wind-512 on 2023-10-30T22:54:15-07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-#app = "little-flower-981"
+app = "throbbing-wind-512"
 primary_region = "sjc"
 
 [build]
   image = "macross2/gamersonly:latest"
 
 [env]
-  ASPNETCORE_URLS="http://+:8080"
-  CloudinarySettings__CloudName="dh1ncuyui"
-  CloudinarySettings__ApiKey="878135373958519"
+  ASPNETCORE_URLS = "http://+:8080"
+  CloudinarySettings__ApiKey = "878135373958519"
+  CloudinarySettings__CloudName = "dh1ncuyui"
 
 [http_service]
   internal_port = 8080

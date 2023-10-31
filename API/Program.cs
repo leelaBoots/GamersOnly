@@ -26,7 +26,8 @@ builder.Services.AddSignalR();
 
 //Config.EnableCors(cors);
 
-// Comment all this stuff out while using the sqlite DB
+// Comment all this stuff out while using the sqlite DB, or postgres locally
+// this is only used for fly deployment
 var connString = "";
 if (builder.Environment.IsDevelopment()) 
     connString = builder.Configuration.GetConnectionString("DefaultConnection");
